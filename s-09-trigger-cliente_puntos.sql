@@ -3,16 +3,21 @@
 --@Descripción: Trigger para actualizar los puntos de un cliente
 
 create or replace trigger cliente_puntos_trigger
-	after insert on orden_compra
+	after insert on factura
 	for each row
 DECLARE
+pragma autonomous_transaction;
 v_puntos numeric(2,0);
 v_monto_total numeric(6,2);
 BEGIN
 select puntos 
 into v_puntos
 from cliente 
-where cliente_id = :NEW.cliente_id;
+where cliente_id IN (
+	select cliente_id
+	from orden_compra
+	where orden_compra_id = :NEW.orden_compra_id
+);
 
 select monto_total
 into v_monto_total
@@ -26,12 +31,20 @@ if v_puntos >= 10 then
 
 	update cliente
 	set puntos = 0
-	where cliente_id = :NEW.cliente_id;
+	where cliente_id IN (
+	select cliente_id
+	from orden_compra
+	where orden_compra_id = :NEW.orden_compra_id
+);
 
 else
 	update cliente
 	set puntos = (v_puntos + 1)
-	where cliente_id = :NEW.cliente_id;
+	where cliente_id IN (
+	select cliente_id
+	from orden_compra
+	where orden_compra_id = :NEW.orden_compra_id
+);
 end if;
 end;
 /

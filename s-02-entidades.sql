@@ -24,7 +24,7 @@ create table precio_producto(
 	precio_producto_id numeric(10,0) not null,
 	precio numeric(6,2) not null,
 	fecha_inicio date default sysdate not null,
-	fecha_fin date not null,
+	fecha_fin date default sysdate not null,
 	producto_id numeric(10,0) not null,
 	constraint precio_producto_pk primary key(precio_producto_id),
 	constraint producto_id_fk foreign key(producto_id) references producto(producto_id)

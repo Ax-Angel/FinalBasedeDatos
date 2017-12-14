@@ -25,3 +25,5 @@ FOR orden_compra;
 
 CREATE SYNONYM sr_proy_admin.paquete_sinonimo
 FOR paquete;
+
+connect sr_proy_admin / password
